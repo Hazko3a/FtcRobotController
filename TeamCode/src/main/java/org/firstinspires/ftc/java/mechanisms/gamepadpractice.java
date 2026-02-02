@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.robotinfo;
+package org.firstinspires.ftc.java.mechanisms;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Disabled
 @TeleOp
 public class gamepadpractice extends OpMode {
 

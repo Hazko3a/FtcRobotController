@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode.mechanisms;
+package org.firstinspires.ftc.java.mechanisms;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class MotorPlusOnDT {
+public class MotorPlusOnDT{
     private DcMotor leftsidemotor, rightsidemotor;
 
-    public void init(HardwareMap hwMap) {
+    public void init (HardwareMap hwMap) {
         leftsidemotor = hwMap.get(DcMotor.class,"Motor 0");
         rightsidemotor = hwMap.get(DcMotor.class, "Motor 1");
 
@@ -20,6 +21,10 @@ public class MotorPlusOnDT {
         leftsidemotor.setDirection(DcMotor.Direction.FORWARD);
 
         rightsidemotor.setDirection(DcMotor.Direction.REVERSE);
+    }
+    public void setMotorSpeed(double speed) {
+        leftsidemotor.setPower(speed);
+        rightsidemotor.setPower(speed);
     }
     public void drive(double throttle, double spin)
     {
@@ -37,4 +42,5 @@ public class MotorPlusOnDT {
         leftsidemotor.setPower(leftPower);
         rightsidemotor.setPower(rightPower);
         }
-    }
+
+}
