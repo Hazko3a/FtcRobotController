@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.java.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MotorPlusOnDT{
@@ -16,8 +17,8 @@ public class MotorPlusOnDT{
 
         //forward , reverse is used as one of the motors will be opposing the other,
         //and as such requires alternate rotation inputs
-        leftSideMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightSideMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftSideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightSideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void setMotorSpeed (double speed) {
         leftSideMotor.setPower(speed);
