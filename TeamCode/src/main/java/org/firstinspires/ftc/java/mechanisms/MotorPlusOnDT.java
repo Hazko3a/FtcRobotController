@@ -1,30 +1,27 @@
 package org.firstinspires.ftc.java.mechanisms;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MotorPlusOnDT{
-    private DcMotor leftsidemotor, rightsidemotor;
+    private DcMotor leftSideMotor, rightSideMotor;
 
     public void init (HardwareMap hwMap) {
-        leftsidemotor = hwMap.get(DcMotor.class,"Motor 0");
-        rightsidemotor = hwMap.get(DcMotor.class, "Motor 1");
+        leftSideMotor = hwMap.get(DcMotor.class,"Motor 0");
+        rightSideMotor = hwMap.get(DcMotor.class, "Motor 1");
 
         // using run using encoder to have motors achieving the same velocity
-        leftsidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightsidemotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //forward , reverse is used as one of the motors will be opposing the other,
         //and as such requires alternate rotation inputs
-        leftsidemotor.setDirection(DcMotor.Direction.FORWARD);
-
-        rightsidemotor.setDirection(DcMotor.Direction.REVERSE);
+        leftSideMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightSideMotor.setDirection(DcMotor.Direction.REVERSE);
     }
-    public void setMotorSpeed(double speed) {
-        leftsidemotor.setPower(speed);
-        rightsidemotor.setPower(speed);
+    public void setMotorSpeed (double speed) {
+        leftSideMotor.setPower(speed);
+        rightSideMotor.setPower(speed);
     }
     public void drive(double throttle, double spin)
     {
@@ -39,8 +36,8 @@ public class MotorPlusOnDT{
             rightPower /= largest;
         }
 
-        leftsidemotor.setPower(leftPower);
-        rightsidemotor.setPower(rightPower);
+        leftSideMotor.setPower(leftPower);
+        rightSideMotor.setPower(rightPower);
         }
 
 }
