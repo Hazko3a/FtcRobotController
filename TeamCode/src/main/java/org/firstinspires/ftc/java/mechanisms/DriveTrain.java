@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.java.mechanisms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-
+@TeleOp
 
 public class DriveTrain extends OpMode {
 
@@ -16,8 +17,8 @@ public class DriveTrain extends OpMode {
     @Override
     public void init() {
         // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftDrive  = hardwareMap.get(DcMotor.class, "Motor 0");
+        rightDrive = hardwareMap.get(DcMotor.class, "Motor 1");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -42,5 +43,5 @@ public class DriveTrain extends OpMode {
         leftDrive.setPower(left);
         rightDrive.setPower(right);
     }
-    
+
 }
