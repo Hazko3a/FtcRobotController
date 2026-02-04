@@ -4,7 +4,7 @@ package org.firstinspires.ftc.java.mechanisms;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 
 
 @TeleOp
@@ -43,7 +43,8 @@ public class DriveTrain extends OpMode {
         double left;
         double right;
 
-        //booleans read true-false in comparison to joysticks using double which read values of numbers.
+        //temp
+        double spinner;
 
 
 
@@ -51,9 +52,16 @@ public class DriveTrain extends OpMode {
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
+        //temp
+        spinner = gamepad1.right_stick_x;
+
 
         leftDrive.setPower(left);
         rightDrive.setPower(right);
+
+        //temporary. needs togglable.
+        collectionWheel.setPower(spinner);
+
 
 
     }
