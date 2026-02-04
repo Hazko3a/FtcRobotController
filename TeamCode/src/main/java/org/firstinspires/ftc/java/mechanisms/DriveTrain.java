@@ -4,6 +4,7 @@ package org.firstinspires.ftc.java.mechanisms;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @TeleOp
@@ -18,8 +19,8 @@ public class DriveTrain extends OpMode {
     @Override
     public void init() {
         // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "Motor 1");
-        rightDrive = hardwareMap.get(DcMotor.class, "Motor 0");
+        leftDrive  = hardwareMap.get(DcMotor.class, "Motor 0");
+        rightDrive = hardwareMap.get(DcMotor.class, "Motor 1");
 
         // for collection of balls on the robot
         collectionWheel = hardwareMap.get(DcMotor.class, "Hex Motor 2");
@@ -28,8 +29,8 @@ public class DriveTrain extends OpMode {
         // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
 
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         collectionWheel.setDirection(DcMotor.Direction.FORWARD);
 
@@ -56,6 +57,7 @@ public class DriveTrain extends OpMode {
 
 
     }
-    
+
+
 
 }
