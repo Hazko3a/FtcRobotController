@@ -23,7 +23,7 @@ public class Gamepad extends OpMode {
     telemetry.addData("x lstick",gamepad1.left_stick_x);
     telemetry.addData("y lstick",speedForward);
     telemetry.addData("x rstick", gamepad1.right_stick_x);
-    telemetry.addData("y rstick" gamepad1.right_stick_y);
+    telemetry.addData("y rstick",- gamepad1.right_stick_y);
     telemetry.addData("diff x", diffXsticks);
 
     telemetry.addData("a button", gamepad1.a);
