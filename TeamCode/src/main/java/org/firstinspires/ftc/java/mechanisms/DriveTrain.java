@@ -17,8 +17,8 @@ public class DriveTrain extends OpMode {
     @Override
     public void init() {
         // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "Motor 0");
-        rightDrive = hardwareMap.get(DcMotor.class, "Motor 1");
+        leftDrive  = hardwareMap.get(DcMotor.class, "Motor 1");
+        rightDrive = hardwareMap.get(DcMotor.class, "Motor 0");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
