@@ -16,6 +16,10 @@ public class DriveTrain extends OpMode {
     public DcMotor  rightDrive  = null;
     public DcMotor collectionWheel = null;
 
+    //boolean for the collection wheel
+    private boolean collectionWheelOn = false;
+    private boolean aPressed = false;
+
     @Override
     public void init() {
         // Define and Initialize Motors
@@ -43,30 +47,24 @@ public class DriveTrain extends OpMode {
         double left;
         double right;
 
-        //temp
-        double spinner;
-
-
-
         // Run wheels in tank mode (note: The joystick goes negative when pushed forward, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
-        //temp
-        spinner = gamepad1.right_stick_x;
-
-
         leftDrive.setPower(left);
         rightDrive.setPower(right);
 
-        //temporary. needs togglable.
-        collectionWheel.setPower(spinner);
 
+        // a few different codes here to help compact the coding
+        if (gamepad1.a && !aPressed) {
+            collectionWheelOn = !collectionWheelOn;
+        }
+        aPressed = gamepad1.a;
 
-
-
+        if (collectionWheelOn) {
+            collectionWheel.setPower(1.0);
+        } else {
+            collectionWheel.setPower(0.0);
+        }
     }
-
-
-
 }
