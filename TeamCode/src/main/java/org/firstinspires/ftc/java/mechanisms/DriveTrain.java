@@ -4,7 +4,7 @@ package org.firstinspires.ftc.java.mechanisms;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @TeleOp
@@ -18,7 +18,7 @@ public class DriveTrain extends OpMode {
 
     //boolean for the collection wheel
     private boolean collectionWheelOn = false;
-    private boolean aPressed = false;
+    private boolean bPressed = false;
 
     @Override
     public void init() {
@@ -36,7 +36,8 @@ public class DriveTrain extends OpMode {
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        collectionWheel.setDirection(DcMotor.Direction.FORWARD);
+        collectionWheel.setDirection(DcMotor.Direction.REVERSE
+        01-);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData(">", "Robot Ready.  Press START.");    //
@@ -56,10 +57,10 @@ public class DriveTrain extends OpMode {
 
 
         // a few different codes here to help compact the coding
-        if (gamepad1.a && !aPressed) {
+        if (gamepad1.b && !bPressed) {
             collectionWheelOn = !collectionWheelOn;
         }
-        aPressed = gamepad1.a;
+        bPressed = gamepad1.b;
 
         if (collectionWheelOn) {
             collectionWheel.setPower(1.0);
