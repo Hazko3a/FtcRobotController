@@ -86,7 +86,7 @@ public class DriveTrain extends OpMode {
         aPressed = gamepad1.a;
 
         if (flyWheelOn) {
-            flyWheel.setPower(2.0);
+            flyWheel.setPower(1.0);
         } else {
             flyWheel.setPower(0.0);
         }
