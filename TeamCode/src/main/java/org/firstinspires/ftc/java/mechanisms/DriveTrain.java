@@ -4,7 +4,7 @@ package org.firstinspires.ftc.java.mechanisms;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @TeleOp
@@ -48,7 +48,7 @@ public class DriveTrain extends OpMode {
 
         collectionWheel.setDirection(DcMotor.Direction.REVERSE);
 
-        flyWheel.setDirection(DcMotor.Direction.REVERSE);
+        flyWheel.setDirection(DcMotor.Direction.FORWARD);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData(">", "Robot Ready.  Press START.");    //
@@ -74,7 +74,7 @@ public class DriveTrain extends OpMode {
         bPressed = gamepad1.b;
 
         if (collectionWheelOn) {
-            collectionWheel.setPower(1.0);
+            collectionWheel.setPower(2.0);
         } else {
             collectionWheel.setPower(0.0);
         }
@@ -89,6 +89,11 @@ public class DriveTrain extends OpMode {
             flyWheel.setPower(1.0);
         } else {
             flyWheel.setPower(0.0);
+            
         }
+        telemetry.addData("gamepad1.a", gamepad1.a);
+        telemetry.addData("aPressed", aPressed);
+        telemetry.addData("flyWheelOn", flyWheelOn);
+        telemetry.update();
     }
 }
