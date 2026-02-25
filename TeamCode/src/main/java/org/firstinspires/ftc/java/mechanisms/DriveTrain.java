@@ -64,8 +64,7 @@ public class DriveTrain extends OpMode {
 
         flyWheel.setDirection(DcMotor.Direction.FORWARD);
 
-        ballStopper = hardwareMap.get(Servo.class, "ballStopper");
-        ballStopper.setPosition(0.5);
+        ballStopper.setPosition(-0.5);
 
 
         // Send telemetry message to signify robot waiting;
@@ -92,7 +91,7 @@ public class DriveTrain extends OpMode {
         bPressed = gamepad1.b;
 
         if (collectionWheelOn) {
-            collectionWheel.setPower(2.0);
+            collectionWheel.setPower(1.0);
         } else {
             collectionWheel.setPower(0.0);
         }
@@ -115,7 +114,7 @@ public class DriveTrain extends OpMode {
         yPressed = gamepad1.y;
 
         if (ballStopperOn) {
-            ballStopper.setPosition(0.0);
+            ballStopper.setPosition(-0.5);
         } else {
             ballStopper.setPosition(0.5);
         }
@@ -124,6 +123,8 @@ public class DriveTrain extends OpMode {
         telemetry.addData("flyWheelOn", flyWheelOn);
         telemetry.addData("gamepad1.y", gamepad1.y);
         telemetry.addData("yPressed", yPressed);
+        telemetry.addData("ballStopperOn", ballStopperOn);
+        telemetry.addData("ballStopper Position", ballStopper.getPosition());
         telemetry.update();
     }
 
