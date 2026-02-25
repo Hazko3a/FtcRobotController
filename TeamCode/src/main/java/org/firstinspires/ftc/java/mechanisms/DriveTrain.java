@@ -4,7 +4,7 @@ package org.firstinspires.ftc.java.mechanisms;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp
@@ -18,6 +18,10 @@ public class DriveTrain extends OpMode {
 
     public DcMotor flyWheel = null;
 
+    public Servo ballStopper = null;
+
+
+
     //boolean for the collection wheel
     private boolean collectionWheelOn = false;
     private boolean bPressed = false;
@@ -25,6 +29,11 @@ public class DriveTrain extends OpMode {
 
     private boolean flyWheelOn = false;
     private boolean aPressed = false;
+
+
+    private boolean ballStopperOn = false;
+    private boolean yPressed = false;
+
 
 
     @Override
@@ -39,6 +48,10 @@ public class DriveTrain extends OpMode {
         //for the flywheel
         flyWheel = hardwareMap.get(DcMotor.class, "Flywheel Motor 3");
 
+        //for the ball stopper
+        ballStopper = hardwareMap.get(Servo.class, "ballStopper");
+
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -46,9 +59,14 @@ public class DriveTrain extends OpMode {
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
+
         collectionWheel.setDirection(DcMotor.Direction.REVERSE);
 
         flyWheel.setDirection(DcMotor.Direction.FORWARD);
+
+        ballStopper = hardwareMap.get(Servo.class, "ballStopper");
+        ballStopper.setPosition(0.5);
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData(">", "Robot Ready.  Press START.");    //
@@ -89,11 +107,24 @@ public class DriveTrain extends OpMode {
             flyWheel.setPower(1.0);
         } else {
             flyWheel.setPower(0.0);
-            
+        }
+
+        if (gamepad1.y && !yPressed) {
+            ballStopperOn = !ballStopperOn;
+        }
+        yPressed = gamepad1.y;
+
+        if (ballStopperOn) {
+            ballStopper.setPosition(0.0);
+        } else {
+            ballStopper.setPosition(0.5);
         }
         telemetry.addData("gamepad1.a", gamepad1.a);
         telemetry.addData("aPressed", aPressed);
         telemetry.addData("flyWheelOn", flyWheelOn);
+        telemetry.addData("gamepad1.y", gamepad1.y);
+        telemetry.addData("yPressed", yPressed);
         telemetry.update();
     }
+
 }
