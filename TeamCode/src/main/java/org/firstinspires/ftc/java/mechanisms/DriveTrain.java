@@ -64,7 +64,7 @@ public class DriveTrain extends OpMode {
 
         flyWheel.setDirection(DcMotor.Direction.FORWARD);
 
-        ballStopper.setPosition(-0.5);
+        ballStopper.setPosition(0.6);
 
 
         // Send telemetry message to signify robot waiting;
@@ -114,9 +114,9 @@ public class DriveTrain extends OpMode {
         yPressed = gamepad1.y;
 
         if (ballStopperOn) {
-            ballStopper.setPosition(-0.5);
+            ballStopper.setPosition(0.1);
         } else {
-            ballStopper.setPosition(0.5);
+            ballStopper.setPosition(0.6);
         }
         telemetry.addData("gamepad1.a", gamepad1.a);
         telemetry.addData("aPressed", aPressed);
