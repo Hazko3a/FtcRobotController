@@ -20,6 +20,9 @@ public class DriveTrain extends OpMode {
 
     public Servo ballStopper = null;
 
+    public Servo liftMechanism = null;
+
+
 
 
     //boolean for the collection wheel
@@ -33,6 +36,11 @@ public class DriveTrain extends OpMode {
 
     private boolean ballStopperOn = false;
     private boolean yPressed = false;
+
+
+    private boolean liftMechanismOn = false;
+    private boolean xPressed = false;
+
 
 
 
@@ -51,6 +59,17 @@ public class DriveTrain extends OpMode {
         //for the ball stopper
         ballStopper = hardwareMap.get(Servo.class, "ballStopper");
 
+        //for the lift mechanism
+        liftMechanism = hardwareMap.get(Servo.class, "liftMechanism1");
+        liftMechanism.setDirection(Servo.Direction.REVERSE);
+
+
+
+
+
+
+
+
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -64,7 +83,12 @@ public class DriveTrain extends OpMode {
 
         flyWheel.setDirection(DcMotor.Direction.FORWARD);
 
-        ballStopper.setPosition(0.6);
+        ballStopper.setPosition(0.7);
+
+
+
+        liftMechanism.setPosition(0.0);
+
 
 
         // Send telemetry message to signify robot waiting;
@@ -85,6 +109,8 @@ public class DriveTrain extends OpMode {
 
 
         // a few different codes here to help compact the coding
+
+        //collection wheel code
         if (gamepad1.b && !bPressed) {
             collectionWheelOn = !collectionWheelOn;
         }
@@ -108,23 +134,50 @@ public class DriveTrain extends OpMode {
             flyWheel.setPower(0.0);
         }
 
+        //ball stopper code
         if (gamepad1.y && !yPressed) {
             ballStopperOn = !ballStopperOn;
         }
         yPressed = gamepad1.y;
 
         if (ballStopperOn) {
-            ballStopper.setPosition(0.1);
+            ballStopper.setPosition(0.2);
         } else {
-            ballStopper.setPosition(0.6);
+            ballStopper.setPosition(0.7);
         }
+
+        //lift mechanism code
+        if (gamepad1.x && !xPressed) {
+            liftMechanismOn = !liftMechanismOn;
+        }
+        xPressed = gamepad1.x;
+
+        if (liftMechanismOn) {
+            liftMechanism.setPosition(1.0);
+        } else {
+            liftMechanism.setPosition(0.0);
+        }
+
+
+        //shows value of flywheel
         telemetry.addData("gamepad1.a", gamepad1.a);
         telemetry.addData("aPressed", aPressed);
         telemetry.addData("flyWheelOn", flyWheelOn);
+        //shows value of ball stopper
         telemetry.addData("gamepad1.y", gamepad1.y);
         telemetry.addData("yPressed", yPressed);
         telemetry.addData("ballStopperOn", ballStopperOn);
         telemetry.addData("ballStopper Position", ballStopper.getPosition());
+        //shows value of lift mechanism
+        telemetry.addData("gamepad1.x", gamepad1.x);
+        telemetry.addData("xPressed", xPressed);
+        telemetry.addData("liftMechanismOn", liftMechanismOn);
+        telemetry.addData("liftMechanism Position", liftMechanism.getPosition());
+        //shows value of collection wheel
+        telemetry.addData("gamepad1.b", gamepad1.b);
+        telemetry.addData("bPressed", bPressed);
+        telemetry.addData("collectionWheelOn", collectionWheelOn);
+
         telemetry.update();
     }
 
