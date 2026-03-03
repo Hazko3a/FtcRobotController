@@ -3,8 +3,10 @@ package org.firstinspires.ftc.java.mechanisms;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp
@@ -20,7 +22,7 @@ public class DriveTrain extends OpMode {
 
     public Servo ballStopper = null;
 
-    public Servo liftMechanism = null;
+    public CRServo liftMechanism = null;
 
 
 
@@ -39,7 +41,10 @@ public class DriveTrain extends OpMode {
 
 
     private boolean liftMechanismOn = false;
+    private boolean liftForward = true;
     private boolean xPressed = false;
+    private ElapsedTime liftTimer = new ElapsedTime();
+    private final double LIFT_DURATION = 3.0;
 
 
 
@@ -60,12 +65,8 @@ public class DriveTrain extends OpMode {
         ballStopper = hardwareMap.get(Servo.class, "ballStopper");
 
         //for the lift mechanism
-        liftMechanism = hardwareMap.get(Servo.class, "liftMechanism1");
-        liftMechanism.setDirection(Servo.Direction.REVERSE);
-
-
-
-
+        liftMechanism = hardwareMap.get(CRServo.class, "liftMechanism1");
+        liftMechanism.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -87,7 +88,7 @@ public class DriveTrain extends OpMode {
 
 
 
-        liftMechanism.setPosition(0.0);
+        liftMechanism.setPower(0.0);
 
 
 
@@ -149,13 +150,18 @@ public class DriveTrain extends OpMode {
         //lift mechanism code
         if (gamepad1.x && !xPressed) {
             liftMechanismOn = !liftMechanismOn;
+            if (liftMechanismOn) {
+                liftTimer.reset();
+                liftForward = !liftForward; // Toggles direction each time it starts
+            }
         }
         xPressed = gamepad1.x;
 
-        if (liftMechanismOn) {
-            liftMechanism.setPosition(1.0);
+        if (liftMechanismOn && liftTimer.seconds() < LIFT_DURATION) {
+            liftMechanism.setPower(liftForward ? 1.0 : -1.0);
         } else {
-            liftMechanism.setPosition(0.0);
+            liftMechanism.setPower(0.0);
+            liftMechanismOn = false;
         }
 
 
@@ -172,7 +178,7 @@ public class DriveTrain extends OpMode {
         telemetry.addData("gamepad1.x", gamepad1.x);
         telemetry.addData("xPressed", xPressed);
         telemetry.addData("liftMechanismOn", liftMechanismOn);
-        telemetry.addData("liftMechanism Position", liftMechanism.getPosition());
+        telemetry.addData("liftMechanism Power", liftMechanism.getPower());
         //shows value of collection wheel
         telemetry.addData("gamepad1.b", gamepad1.b);
         telemetry.addData("bPressed", bPressed);
