@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -45,10 +44,7 @@ public class DriveTrain extends OpMode {
     private boolean liftMechanismOn = false;
     private boolean liftForward = true;
     private boolean xPressed = false;
-    private ElapsedTime liftTimer = new ElapsedTime();
-    private final double LIFT_DURATION = 2.8;
-
-
+    private final ElapsedTime liftTimer = new ElapsedTime();
 
 
     @Override
@@ -70,13 +66,16 @@ public class DriveTrain extends OpMode {
         liftMechanism1 = hardwareMap.get(CRServo.class, "liftMechanism1");
         liftMechanism2 = hardwareMap.get(CRServo.class, "liftMechanism2");
 
+        /* 
+           MATCHING LOGIC: 
+           If servos are mounted on opposite sides (mirror-imaged), 
+           one MUST be reversed so they "match" and move the lift together.
+        */
         liftMechanism1.setDirection(DcMotor.Direction.FORWARD);
         liftMechanism2.setDirection(DcMotor.Direction.REVERSE);
 
 
-
-
-
+        
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -94,13 +93,18 @@ public class DriveTrain extends OpMode {
 
 
 
-        liftMechanism1.setPower(0.0);
-        liftMechanism2.setPower(0.0);
+        setLiftPower(0.0);
 
 
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData(">", "Robot Ready.  Press START.");    //
+    }
+
+    // Helper method to ensure both servos always get the same command
+    private void setLiftPower(double power) {
+        liftMechanism1.setPower(power);
+        liftMechanism2.setPower(power);
     }
 
     @Override
@@ -164,13 +168,13 @@ public class DriveTrain extends OpMode {
         }
         xPressed = gamepad1.x;
 
+        double LIFT_DURATION = 1.8;
         if (liftMechanismOn && liftTimer.seconds() < LIFT_DURATION) {
-            double liftPower = liftForward ? 1.0 : -1.0;
-            liftMechanism1.setPower(liftPower);
-            liftMechanism2.setPower(liftPower);
+
+            double LIFT_SPEED = 1.0;
+            setLiftPower(liftForward ? LIFT_SPEED : -LIFT_SPEED);
         } else {
-            liftMechanism1.setPower(0.0);
-            liftMechanism2.setPower(0.0);
+            setLiftPower(0.0);
             liftMechanismOn = false;
         }
 
