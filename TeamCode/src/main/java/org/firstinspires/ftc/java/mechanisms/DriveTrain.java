@@ -23,7 +23,8 @@ public class DriveTrain extends OpMode {
 
     public Servo ballStopper = null;
 
-    public CRServo liftMechanism = null;
+    public CRServo liftMechanism1 = null;
+    public CRServo liftMechanism2 = null;
 
 
 
@@ -66,9 +67,11 @@ public class DriveTrain extends OpMode {
         ballStopper = hardwareMap.get(Servo.class, "ballStopper");
 
         //for the lift mechanism
-        liftMechanism = hardwareMap.get(CRServo.class, "liftMechanism1");
+        liftMechanism1 = hardwareMap.get(CRServo.class, "liftMechanism1");
+        liftMechanism2 = hardwareMap.get(CRServo.class, "liftMechanism2");
 
-        liftMechanism.setDirection(DcMotor.Direction.FORWARD);
+        liftMechanism1.setDirection(DcMotor.Direction.FORWARD);
+        liftMechanism2.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -91,7 +94,8 @@ public class DriveTrain extends OpMode {
 
 
 
-        liftMechanism.setPower(0.0);
+        liftMechanism1.setPower(0.0);
+        liftMechanism2.setPower(0.0);
 
 
 
@@ -161,9 +165,12 @@ public class DriveTrain extends OpMode {
         xPressed = gamepad1.x;
 
         if (liftMechanismOn && liftTimer.seconds() < LIFT_DURATION) {
-            liftMechanism.setPower(liftForward ? 1.0 : -1.0);
+            double liftPower = liftForward ? 1.0 : -1.0;
+            liftMechanism1.setPower(liftPower);
+            liftMechanism2.setPower(liftPower);
         } else {
-            liftMechanism.setPower(0.0);
+            liftMechanism1.setPower(0.0);
+            liftMechanism2.setPower(0.0);
             liftMechanismOn = false;
         }
 
@@ -181,7 +188,8 @@ public class DriveTrain extends OpMode {
         telemetry.addData("gamepad1.x", gamepad1.x);
         telemetry.addData("xPressed", xPressed);
         telemetry.addData("liftMechanismOn", liftMechanismOn);
-        telemetry.addData("liftMechanism Power", liftMechanism.getPower());
+        telemetry.addData("lift1 Power", liftMechanism1.getPower());
+        telemetry.addData("lift2 Power", liftMechanism2.getPower());
         //shows value of collection wheel
         telemetry.addData("gamepad1.b", gamepad1.b);
         telemetry.addData("bPressed", bPressed);
