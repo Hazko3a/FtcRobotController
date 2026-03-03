@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -44,7 +45,7 @@ public class DriveTrain extends OpMode {
     private boolean liftForward = true;
     private boolean xPressed = false;
     private ElapsedTime liftTimer = new ElapsedTime();
-    private final double LIFT_DURATION = 3.0;
+    private final double LIFT_DURATION = 2.8;
 
 
 
@@ -66,7 +67,9 @@ public class DriveTrain extends OpMode {
 
         //for the lift mechanism
         liftMechanism = hardwareMap.get(CRServo.class, "liftMechanism1");
-        liftMechanism.setDirection(DcMotor.Direction.REVERSE);
+
+        liftMechanism.setDirection(DcMotor.Direction.FORWARD);
+
 
 
 
