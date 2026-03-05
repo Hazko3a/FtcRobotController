@@ -153,7 +153,7 @@ public class DriveTrain extends OpMode {
         yPressed = gamepad1.y;
 
         if (ballStopperOn) {
-            ballStopper.setPosition(0.2);
+            ballStopper.setPosition(0.35);
         } else {
             ballStopper.setPosition(0.7);
         }
