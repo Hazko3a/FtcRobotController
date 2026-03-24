@@ -67,23 +67,15 @@ public class TopLeftRedBox extends LinearOpMode {
         // Wait for the game to start (driver presses START)
         waitForStart();
 
-        // Step 1: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);
 
-        // Step 2: Forward 48 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  40,  40, 5.0);
-
-        // Step 3: Turn almost all the way around with a 4 Sec timeout
-        encoderDrive(TURN_SPEED,   42, -42, 4.0);
+        // Step 1: Forward 48 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -2.0,  -2.0, 0.5);
 
 
         // Step 4: Spin Flywheel with 1 Sec timeout for ramp up
         flyWheel.setPower(1.0);
         sleep(1000);
 
-        // Step 5: Ball Stopper to 0.7 (false) with 0.5 Sec timeout
-        ballStopper.setPosition(0.7);
-        sleep(500);
 
         // Step 6: Start Collection Wheel and keep flywheel going for 5 Sec timeout
         collectionWheel.setPower(1.0);

@@ -46,6 +46,10 @@ public class BottomRightBlueBox extends LinearOpMode {
         collectionWheel.setDirection(DcMotor.Direction.REVERSE);
         flyWheel.setDirection(DcMotor.Direction.FORWARD);
 
+        // Set motors to BRAKE to stop them from drifting/coasting
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -61,20 +65,12 @@ public class BottomRightBlueBox extends LinearOpMode {
                 rightDrive.getCurrentPosition());
         telemetry.update();
 
-
-
-
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // Step 1: Forward 48 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);
+        encoderDrive(DRIVE_SPEED,  -4.5,  -4.5, 1.0);
 
-        // Step 2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   -12, 12, 4.0);
-
-        // Step 3: Forward 9.6 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, 9.6, 9.6, 4.0);
 
         // Step 4: Spin Flywheel with 1 Sec timeout for ramp up
         flyWheel.setPower(1.0);
@@ -89,6 +85,8 @@ public class BottomRightBlueBox extends LinearOpMode {
         sleep(5000);
 
         // Stop all motion at the end
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
         flyWheel.setPower(0);
         collectionWheel.setPower(0);
 
@@ -96,10 +94,6 @@ public class BottomRightBlueBox extends LinearOpMode {
         telemetry.update();
         sleep(1000);
     }
-
-
-
-
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
