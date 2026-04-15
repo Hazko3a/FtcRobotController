@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.java.mechanisms;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,100 +7,70 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
 @TeleOp
-
 public class DriveTrain extends OpMode {
 
     /* Declare OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
+    public DcMotor  frontLeft   = null;
+    public DcMotor  backLeft    = null;
+    public DcMotor  frontRight  = null;
+    public DcMotor  backRight   = null;
+    
     public DcMotor collectionWheel = null;
-
     public DcMotor flyWheel = null;
-
     public Servo ballStopper = null;
 
     public CRServo liftMechanism1 = null;
     public CRServo liftMechanism2 = null;
 
-
-
-
-    //boolean for the collection wheel
+    // Control variables
     private boolean collectionWheelOn = false;
     private boolean bPressed = false;
-
 
     private boolean flyWheelOn = false;
     private boolean aPressed = false;
 
-
     private boolean ballStopperOn = false;
     private boolean yPressed = false;
-
 
     private boolean liftMechanismOn = false;
     private boolean liftForward = true;
     private boolean xPressed = false;
     private final ElapsedTime liftTimer = new ElapsedTime();
 
-
     @Override
     public void init() {
-        // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "Motor 0");
-        rightDrive = hardwareMap.get(DcMotor.class, "Motor 1");
+        // Initialize Drive Motors
+        frontLeft  = hardwareMap.get(DcMotor.class, "Motor 2 nbgyfhnm ");
+        backLeft   = hardwareMap.get(DcMotor.class, "Motor 3");
+        frontRight = hardwareMap.get(DcMotor.class, "Motor 0");
+        backRight  = hardwareMap.get(DcMotor.class, "Motor 1");
 
-        // for collection of balls on the robot
+        // Initialize Mechanisms
         collectionWheel = hardwareMap.get(DcMotor.class, "collection wheel");
-
-        //for the flywheel
         flyWheel = hardwareMap.get(DcMotor.class, "Flywheel");
-
-        //for the ball stopper
         ballStopper = hardwareMap.get(Servo.class, "ballStopper");
-
-        //for the lift mechanism
         liftMechanism1 = hardwareMap.get(CRServo.class, "liftMechanism1");
         liftMechanism2 = hardwareMap.get(CRServo.class, "liftMechanism2");
 
-        /* 
-           MATCHING LOGIC: 
-           If servos are mounted on opposite sides (mirror-imaged), 
-           one MUST be reversed so they "match" and move the lift together.
-        */
+        // Set Directions
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        collectionWheel.setDirection(DcMotor.Direction.REVERSE);
+        flyWheel.setDirection(DcMotor.Direction.FORWARD);
         liftMechanism1.setDirection(DcMotor.Direction.FORWARD);
         liftMechanism2.setDirection(DcMotor.Direction.REVERSE);
 
-
-        
-
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left and right sticks forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-
-        collectionWheel.setDirection(DcMotor.Direction.REVERSE);
-
-        flyWheel.setDirection(DcMotor.Direction.FORWARD);
-
+        // Initial States
         ballStopper.setPosition(0.7);
-
-
-
         setLiftPower(0.0);
 
-
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData(">", "Robot Ready.  Press START.");    //
+        telemetry.addData(">", "Robot Ready. Press START.");
     }
 
-    // Helper method to ensure both servos always get the same command
     private void setLiftPower(double power) {
         liftMechanism1.setPower(power);
         liftMechanism2.setPower(power);
@@ -109,97 +78,60 @@ public class DriveTrain extends OpMode {
 
     @Override
     public void loop() {
-        double left;
-        double right;
+        // TANK DRIVE LOGIC
+        // Left stick Y controls the entire left side
+        // Right stick Y controls the entire right side
+        double leftPower = -gamepad1.left_stick_y;
+        double rightPower = -gamepad1.right_stick_y;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forward, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        frontLeft.setPower(leftPower);
+        backLeft.setPower(leftPower);
+        frontRight.setPower(rightPower);
+        backRight.setPower(rightPower);
 
-        leftDrive.setPower(left);
-        rightDrive.setPower(right);
-
-
-        // a few different codes here to help compact the coding
-
-        //collection wheel code
+        // Collection Wheel Toggle (Button B)
         if (gamepad1.b && !bPressed) {
             collectionWheelOn = !collectionWheelOn;
         }
         bPressed = gamepad1.b;
+        collectionWheel.setPower(collectionWheelOn ? 1.0 : 0.0);
 
-        if (collectionWheelOn) {
-            collectionWheel.setPower(1.0);
-        } else {
-            collectionWheel.setPower(0.0);
-        }
-
-        //flywheel code
+        // Flywheel Toggle (Button A)
         if (gamepad1.a && !aPressed) {
             flyWheelOn = !flyWheelOn;
         }
         aPressed = gamepad1.a;
+        flyWheel.setPower(flyWheelOn ? 1.0 : 0.0);
 
-        if (flyWheelOn) {
-            flyWheel.setPower(1.0);
-        } else {
-            flyWheel.setPower(0.0);
-        }
-
-        //ball stopper code
+        // Ball Stopper Toggle (Button Y)
         if (gamepad1.y && !yPressed) {
             ballStopperOn = !ballStopperOn;
         }
         yPressed = gamepad1.y;
+        ballStopper.setPosition(ballStopperOn ? 0.35 : 0.7);
 
-        if (ballStopperOn) {
-            ballStopper.setPosition(0.35);
-        } else {
-            ballStopper.setPosition(0.7);
-        }
-
-        //lift mechanism code
+        // Lift Mechanism Control (Button X)
         if (gamepad1.x && !xPressed) {
             liftMechanismOn = !liftMechanismOn;
             if (liftMechanismOn) {
                 liftTimer.reset();
-                liftForward = !liftForward; // Toggles direction each time it starts
+                liftForward = !liftForward;
             }
         }
         xPressed = gamepad1.x;
 
-        double LIFT_DURATION = 1.8;
-        if (liftMechanismOn && liftTimer.seconds() < LIFT_DURATION) {
-
-            double LIFT_SPEED = 1.0;
-            setLiftPower(liftForward ? LIFT_SPEED : -LIFT_SPEED);
+        if (liftMechanismOn && liftTimer.seconds() < 1.8) {
+            setLiftPower(liftForward ? 1.0 : -1.0);
         } else {
             setLiftPower(0.0);
             liftMechanismOn = false;
         }
 
-
-        //shows value of flywheel
-        telemetry.addData("gamepad1.a", gamepad1.a);
-        telemetry.addData("aPressed", aPressed);
-        telemetry.addData("flyWheelOn", flyWheelOn);
-        //shows value of ball stopper
-        telemetry.addData("gamepad1.y", gamepad1.y);
-        telemetry.addData("yPressed", yPressed);
-        telemetry.addData("ballStopperOn", ballStopperOn);
-        telemetry.addData("ballStopper Position", ballStopper.getPosition());
-        //shows value of lift mechanism
-        telemetry.addData("gamepad1.x", gamepad1.x);
-        telemetry.addData("xPressed", xPressed);
-        telemetry.addData("liftMechanismOn", liftMechanismOn);
-        telemetry.addData("lift1 Power", liftMechanism1.getPower());
-        telemetry.addData("lift2 Power", liftMechanism2.getPower());
-        //shows value of collection wheel
-        telemetry.addData("gamepad1.b", gamepad1.b);
-        telemetry.addData("bPressed", bPressed);
-        telemetry.addData("collectionWheelOn", collectionWheelOn);
-
+        // Telemetry
+        telemetry.addData("Drive", "Tank Mode (Dual Stick)");
+        telemetry.addData("Left Power", "%.2f", leftPower);
+        telemetry.addData("Right Power", "%.2f", rightPower);
+        telemetry.addData("Flywheel", flyWheelOn ? "ON" : "OFF");
         telemetry.update();
     }
-
 }
