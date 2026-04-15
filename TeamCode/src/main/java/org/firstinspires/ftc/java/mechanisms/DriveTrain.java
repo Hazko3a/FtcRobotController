@@ -15,7 +15,7 @@ public class DriveTrain extends OpMode {
     public DcMotor  backLeft    = null;
     public DcMotor  frontRight  = null;
     public DcMotor  backRight   = null;
-    
+
     public DcMotor collectionWheel = null;
     public DcMotor flyWheel = null;
     public Servo ballStopper = null;
@@ -41,10 +41,11 @@ public class DriveTrain extends OpMode {
     @Override
     public void init() {
         // Initialize Drive Motors
-        frontLeft  = hardwareMap.get(DcMotor.class, "Motor 2 nbgyfhnm ");
+        frontLeft  = hardwareMap.get(DcMotor.class, "Motor 2");
         backLeft   = hardwareMap.get(DcMotor.class, "Motor 3");
         frontRight = hardwareMap.get(DcMotor.class, "Motor 0");
         backRight  = hardwareMap.get(DcMotor.class, "Motor 1");
+
 
         // Initialize Mechanisms
         collectionWheel = hardwareMap.get(DcMotor.class, "collection wheel");
@@ -53,14 +54,18 @@ public class DriveTrain extends OpMode {
         liftMechanism1 = hardwareMap.get(CRServo.class, "liftMechanism1");
         liftMechanism2 = hardwareMap.get(CRServo.class, "liftMechanism2");
 
-        // Set Directions
+        // Set Directions forward
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
+
+        // Set collection wheel direction
         collectionWheel.setDirection(DcMotor.Direction.REVERSE);
+        // Set fly wheel direction
         flyWheel.setDirection(DcMotor.Direction.FORWARD);
+        // Set lift mechanism direction
         liftMechanism1.setDirection(DcMotor.Direction.FORWARD);
         liftMechanism2.setDirection(DcMotor.Direction.REVERSE);
 
@@ -84,10 +89,15 @@ public class DriveTrain extends OpMode {
         double leftPower = -gamepad1.left_stick_y;
         double rightPower = -gamepad1.right_stick_y;
 
-        frontLeft.setPower(leftPower);
-        backLeft.setPower(leftPower);
-        frontRight.setPower(rightPower);
-        backRight.setPower(rightPower);
+        // SIDE MOVEMENT LOGIC (STRAFING)
+        // Right trigger strafes right, Left trigger strafes left
+        double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
+
+        // Combine powers for Mecanum Tank Drive
+        frontLeft.setPower(leftPower - strafe);
+        backLeft.setPower(leftPower + strafe);
+        frontRight.setPower(rightPower + strafe);
+        backRight.setPower(rightPower - strafe);
 
         // Collection Wheel Toggle (Button B)
         if (gamepad1.b && !bPressed) {
@@ -128,10 +138,13 @@ public class DriveTrain extends OpMode {
         }
 
         // Telemetry
-        telemetry.addData("Drive", "Tank Mode (Dual Stick)");
+        telemetry.addData("Drive", "Tank/Mecanum Hybrid Mode (Dual Stick)");
         telemetry.addData("Left Power", "%.2f", leftPower);
         telemetry.addData("Right Power", "%.2f", rightPower);
+        telemetry.addData("Strafe", "%.2f", strafe);
         telemetry.addData("Flywheel", flyWheelOn ? "ON" : "OFF");
+        telemetry.addData("Collection Wheel", collectionWheelOn ? "ON" : "OFF");
+        telemetry.addData("Ball Stopper", ballStopperOn ? "ON" : "OFF");
         telemetry.update();
     }
 }
