@@ -24,7 +24,7 @@ public class AutomationBlue extends LinearOpMode {
     // Encoder constants
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     WHEEL_DIAMETER_INCHES   = 8.5 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
@@ -69,14 +69,33 @@ public class AutomationBlue extends LinearOpMode {
         // Wait for the game to start (driver presses START)
         waitForStart();
 
-        // Step 1: Move forward 61 cm (~24 inches)
-        // encoderDrive(speed, leftInches, rightInches, timeoutS)
-        encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
+        // Step 1: Move Backwards 61 cm (~24 inches)
+        encoderDrive(DRIVE_SPEED, -24, -24, 5.0);
+
+        // Step 2: Spin Flywheel with 2 Sec timeout for ramp up
+        flyWheel.setPower(1.0);
+        sleep(2000);
+
+        // Step 3: Start Collection Wheel and keep flywheel going for 3.5 Sec timeout
+        collectionWheel.setPower(-1.0);
+        sleep(3500);
+
+        // Stop flywheel and collection
+        flyWheel.setPower(0);
+        collectionWheel.setPower(0);
+        sleep(200);
+
+        // Step 4: Turn 45 degrees by only moving the left side
+        // Distance depends on track width; -11.5 inches is an estimate for 45 degrees on a 15" track.
+        encoderDrive(DRIVE_SPEED, -11.5, 0, 3.0);
+
+        // Step 5: Strafe left (Add strafe code here if needed)
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);
     }
+
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
@@ -113,13 +132,12 @@ public class AutomationBlue extends LinearOpMode {
             frontRight.setPower(Math.abs(speed));
             backRight.setPower(Math.abs(speed));
 
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (frontLeft.isBusy() && frontRight.isBusy())) {
+            // For pivot turns where one side is 0, only check the busy status of the side that is moving
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) &&
+                   (frontLeft.isBusy() || frontRight.isBusy())) {
 
                 // Display status for the driver.
-                telemetry.addData("Status", "Moving forward 61cm");
-                telemetry.addData("Target",  "%7d :%7d", newFrontLeftTarget,  newFrontRightTarget);
+                telemetry.addData("Status", "Driving Encoders");
                 telemetry.addData("Actual",  "%7d :%7d", frontLeft.getCurrentPosition(), frontRight.getCurrentPosition());
                 telemetry.update();
             }
