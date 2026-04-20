@@ -17,7 +17,8 @@ public class DriveTrain extends OpMode {
     public DcMotor  backRight   = null;
 
     public DcMotor collectionWheel = null;
-    public DcMotor flyWheel = null;
+    public DcMotor flyWheel1 = null;
+    public DcMotor flyWheel2 = null;
     public Servo ballStopper = null;
 
     public CRServo liftMechanism1 = null;
@@ -49,22 +50,32 @@ public class DriveTrain extends OpMode {
 
         // Initialize Mechanisms
         collectionWheel = hardwareMap.get(DcMotor.class, "collection wheel");
-        flyWheel = hardwareMap.get(DcMotor.class, "Flywheel");
+        flyWheel1 = hardwareMap.get(DcMotor.class, "Flywheel 1");
+        flyWheel2 = hardwareMap.get(DcMotor.class, "Flywheel 2");
         ballStopper = hardwareMap.get(Servo.class, "ballStopper");
         liftMechanism1 = hardwareMap.get(CRServo.class, "liftMechanism1");
         liftMechanism2 = hardwareMap.get(CRServo.class, "liftMechanism2");
 
-        // Set Directions forward
+        // Set Directions
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
-
-        // Set collection wheel direction
         collectionWheel.setDirection(DcMotor.Direction.REVERSE);
-        // Set fly wheel direction
-        flyWheel.setDirection(DcMotor.Direction.FORWARD);
+        
+        // Flywheel Directions
+        flyWheel1.setDirection(DcMotor.Direction.FORWARD);
+        flyWheel2.setDirection(DcMotor.Direction.REVERSE);
+        
+        // Set both flywheels to RUN_WITHOUT_ENCODER to ensure they respond to power directly
+        flyWheel1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flyWheel2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Set flywheels to FLOAT so they coast down naturally
+        flyWheel1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        flyWheel2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        
         // Set lift mechanism direction
         liftMechanism1.setDirection(DcMotor.Direction.FORWARD);
         liftMechanism2.setDirection(DcMotor.Direction.REVERSE);
@@ -81,16 +92,18 @@ public class DriveTrain extends OpMode {
         liftMechanism2.setPower(power);
     }
 
+    private void setFlywheelPower(double power) {
+        flyWheel1.setPower(power);
+        flyWheel2.setPower(power);
+    }
+
     @Override
     public void loop() {
         // TANK DRIVE LOGIC
-        // Left stick Y controls the entire left side
-        // Right stick Y controls the entire right side
         double leftPower = -gamepad1.left_stick_y;
         double rightPower = -gamepad1.right_stick_y;
 
         // SIDE MOVEMENT LOGIC (STRAFING)
-        // Right trigger strafes right, Left trigger strafes left
         double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
 
         // Combine powers for Mecanum Tank Drive
@@ -111,7 +124,7 @@ public class DriveTrain extends OpMode {
             flyWheelOn = !flyWheelOn;
         }
         aPressed = gamepad1.a;
-        flyWheel.setPower(flyWheelOn ? 1.0 : 0.0);
+        setFlywheelPower(flyWheelOn ? 1.0 : 0.0);
 
         // Ball Stopper Toggle (Button Y)
         if (gamepad1.y && !yPressed) {
@@ -137,14 +150,10 @@ public class DriveTrain extends OpMode {
             liftMechanismOn = false;
         }
 
-        // Telemetry
-        telemetry.addData("Drive", "Tank/Mecanum Hybrid Mode (Dual Stick)");
-        telemetry.addData("Left Power", "%.2f", leftPower);
-        telemetry.addData("Right Power", "%.2f", rightPower);
-        telemetry.addData("Strafe", "%.2f", strafe);
-        telemetry.addData("Flywheel", flyWheelOn ? "ON" : "OFF");
-        telemetry.addData("Collection Wheel", collectionWheelOn ? "ON" : "OFF");
-        telemetry.addData("Ball Stopper", ballStopperOn ? "ON" : "OFF");
+        // Telemetry for Debugging Flywheels
+        telemetry.addData("FW1 Power", "%.2f", flyWheel1.getPower());
+        telemetry.addData("FW2 Power", "%.2f", flyWheel2.getPower());
+        telemetry.addData("Flywheel Status", flyWheelOn ? "ON" : "OFF");
         telemetry.update();
     }
 }
